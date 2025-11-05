@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ডিজিটাল লাইব্রেরি</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 20px; background-color: #f8f9fa; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .site-header { text-align: center; margin-bottom: 30px; }
+        .site-header h1 { font-size: 2.5em; }
+        .list-container { background-color: #ffffff; border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06); overflow: hidden; }
+        .pdf-list { list-style-type: none; padding: 0; margin: 0; }
+        .pdf-list li { border-bottom: 1px solid #e9ecef; }
+        .pdf-list li:last-child { border-bottom: none; }
+        .pdf-list a { display: flex; align-items: center; padding: 20px 25px; text-decoration: none; color: #2c3e50; font-size: 1.1em; transition: background-color 0.2s ease-out; }
+        .pdf-list a::before { content: '📖'; font-size: 1.5em; margin-right: 15px; }
+        .pdf-list a:hover { background-color: #f1f7ff; }
+        .site-footer { text-align: center; margin-top: 30px; color: #6c757d; }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="site-header"><h1><span>📚</span>ডিজিটাল লাইব্রেরি</h1></header>
+        <main class="list-container">
+            <ul class="pdf-list"></ul>
+        </main>
+        <footer class="site-footer"><p>© 2025 | Avijit Sir's Digital Library</p></footer>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const pdfList = document.querySelector('.pdf-list');
+            fetch('links.json')
+                .then(response => response.json())
+                .then(data => {
+                    const pdfListArray = data.pdfs || []; 
+                    if (pdfListArray.length === 0) {
+                         pdfList.innerHTML = '<li style="padding: 20px; text-align: center; color: #6c757d;">এখনও কোনো PDF যোগ করা হয়নি।</li>';
+                         return;
+                    }
+                    pdfListArray.forEach(item => {
+                        const li = document.createElement('li');
+                        const a = document.createElement('a');
+                        a.href = item.url;
+                        const span = document.createElement('span');
+                        span.textContent = item.title;
+                        a.appendChild(span);
+                        li.appendChild(a);
+                        pdfList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading PDF links:', error);
+                    pdfList.innerHTML = '<li style="padding: 20px; color: red; text-align: center;">লিঙ্ক লোড করা যায়নি।</li>';
+                });
+        });
+    </script>
+</body>
+</html>
